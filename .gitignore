@@ -1,0 +1,19 @@
+.env
+
+# terraform周り
+.terraform/
+*.tfvars
+*.tfvars.json
+terraform.tfvars
+*.tfstate.*
+terraform.tfstate
+crash.log
+.terraform.lock.hcl
+
+# draw io
+*.drawio.bkp
+
+# 開発周り
+tasks
+.gitconfig
+.serena

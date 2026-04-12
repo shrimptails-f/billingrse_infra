@@ -1,0 +1,59 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "codex callback access",
+      "type": "shell",
+      "command": "curl -v '${input:codex_callback}'",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "network apply",
+      "type": "shell",
+      "command": "cd ~/infra/stage/dev/network && terraform apply",
+    },
+    {
+      "label": "network destroy",
+      "type": "shell",
+      "command": "cd ~/infra/stage/dev/network && terraform destroy",
+    },
+    {
+      "label": "application apply",
+      "type": "shell",
+      "command": "cd ~/infra/stage/dev/application && terraform apply",
+    },
+    {
+      "label": "application destroy",
+      "type": "shell",
+      "command": "cd ~/infra/stage/dev/application && terraform destroy",
+    },
+    {
+      "label": "packer build",
+      "type": "shell",
+      "command": "cd ~/infra/ami/packer && packer build -var 'stage=${input:stage}' ami.pkr.hcl",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    },
+  ],
+  "inputs": [
+    {
+      "id": "codex_callback",
+      "type": "promptString",
+      "description": "callbackのURLを入力してください",
+      "default": "http://localhost:1455/auth/callback?"
+    },
+    {
+      "id": "stage",
+      "type": "promptString",
+      "description": "stageを選んでくださいprod or stg or dev",
+      "default": "dev"
+    }
+  ]
+}
