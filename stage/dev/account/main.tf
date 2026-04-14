@@ -37,6 +37,7 @@ module "account" {
   aws_region                       = var.aws_region
   stage                            = var.stage
   backend_ecr_repository_name      = var.backend_ecr_repository_name
+  ecr_repository_names             = var.ecr_repository_names
   ecs_task_secretsmanager_arns     = local.ecs_task_secretsmanager_arns
   github_actions_oidc_provider_arn = local.github_actions_oidc_provider_arn
   github_repo_subjects             = var.github_repo_subjects

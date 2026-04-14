@@ -19,6 +19,16 @@ variable "backend_ecr_repository_name" {
   type    = string
   default = "billingrse-dev-backend"
 }
+
+variable "ecr_repository_names" {
+  type = list(string)
+  default = [
+    "billingrse-dev-backend",
+    "billingrse-dev-db-init",
+    "billingrse-dev-redis",
+  ]
+}
+
 variable "ecs_task_secretsmanager_suffixes" {
   type = list(string)
   default = [

@@ -20,9 +20,9 @@ jobs:
     environment: dev
     env:
       AWS_REGION: ap-northeast-1
-      ECR_REPOSITORY: billingrse-dev-backend
+      ECR_REPOSITORY: billingrse-dev-redis
       UPSTREAM_IMAGE: redis:8.4-alpine
-      IMAGE_TAG: redis-${{ github.event.inputs.image_tag || github.sha }}
+      IMAGE_TAG: ${{ github.event.inputs.image_tag || github.sha }}
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
 
     steps:
@@ -39,9 +39,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Ensure backend ECR repository exists
+      - name: Ensure ECR repository exists
         run: |
-          aws ecr describe-repositories --repository-names "${ECR_REPOSITORY}" >/dev/null
+          aws ecr describe-repositories --repository-names "${ECR_REPOSITORY}" >/dev/null 2>&1 || \
+          aws ecr create-repository --repository-name "${ECR_REPOSITORY}"
 
       - name: Build Redis image
         working-directory: ecr_image/redis
@@ -49,7 +50,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           docker build \
-            --build-arg REDIS_VERSION=${IMAGE_TAG} \
             -t ${ECR_REPOSITORY}:${IMAGE_TAG} \
             .
           docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}

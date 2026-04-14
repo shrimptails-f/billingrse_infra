@@ -7,6 +7,12 @@ variable "backend_ecr_repository_name" {
   description = "Backend ECR repository name to create."
 }
 
+variable "ecr_repository_names" {
+  type        = list(string)
+  description = "ECR repository names to create."
+  default     = []
+}
+
 variable "ecs_task_secretsmanager_arns" {
   type        = list(string)
   description = "Secrets Manager ARNs that ECS tasks (task role) can read via GetSecretValue."
@@ -25,8 +31,11 @@ variable "github_actions_oidc_provider_arn" {
 }
 
 locals {
-  project_name      = "billingrse"
-  deploy_name       = "${local.project_name}-${var.stage}"
+  project_name = "billingrse"
+  deploy_name  = "${local.project_name}-${var.stage}"
+  ecr_repository_names = length(var.ecr_repository_names) > 0 ? var.ecr_repository_names : [
+    var.backend_ecr_repository_name
+  ]
   front_bucket_name = "${local.deploy_name}-front"
   common_tags = {
     Project = local.project_name
