@@ -21,7 +21,26 @@ variable "ecs_task_secretsmanager_arns" {
 
 variable "github_repo_subjects" {
   type        = list(string)
-  description = "Allowed GitHub OIDC subjects (token.actions.githubusercontent.com:sub) that can assume the OIDC role."
+  description = "Deprecated fallback subjects for all GitHub OIDC roles."
+  default     = []
+}
+
+variable "github_infra_repo_subjects" {
+  type        = list(string)
+  description = "Allowed GitHub OIDC subjects for infra deploy role."
+  default     = []
+}
+
+variable "github_backend_repo_subjects" {
+  type        = list(string)
+  description = "Allowed GitHub OIDC subjects for backend deploy role."
+  default     = []
+}
+
+variable "github_front_repo_subjects" {
+  type        = list(string)
+  description = "Allowed GitHub OIDC subjects for front deploy role."
+  default     = []
 }
 
 variable "github_actions_oidc_provider_arn" {

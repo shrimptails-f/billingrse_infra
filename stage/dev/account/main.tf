@@ -28,7 +28,7 @@ locals {
     for suffix in var.ecs_task_secretsmanager_suffixes :
     "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:${suffix}"
   ]
-  github_actions_oidc_provider_arn = var.dev_aws_account_id != null && var.dev_aws_account_id != "" ? "arn:aws:iam::${var.dev_aws_account_id}:oidc-provider/token.actions.githubusercontent.com" : null
+  github_actions_oidc_provider_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
 }
 
 module "account" {
@@ -40,5 +40,7 @@ module "account" {
   ecr_repository_names             = var.ecr_repository_names
   ecs_task_secretsmanager_arns     = local.ecs_task_secretsmanager_arns
   github_actions_oidc_provider_arn = local.github_actions_oidc_provider_arn
-  github_repo_subjects             = var.github_repo_subjects
+  github_infra_repo_subjects       = var.github_infra_repo_subjects
+  github_backend_repo_subjects     = var.github_backend_repo_subjects
+  github_front_repo_subjects       = var.github_front_repo_subjects
 }
