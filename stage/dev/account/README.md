@@ -7,7 +7,7 @@
 
 - GitHub Actions から AWS へ接続するための OIDC 連携を構成する
 - CI/CD 用の IAM role を作成する
-- backend 用の ECR repository を作成する
+- backend / db-init / redis 用の ECR repository を作成する
 - ECS task execution role を作成する
 - ECS task role を作成する
 - ECS task が Secrets Manager、ECR などを利用するための IAM policy を定義する
@@ -27,7 +27,7 @@
 
 - GitHub Actions OIDC provider
 - GitHub Actions が AssumeRole する CI/CD 用 IAM role
-- backend 用 ECR repository
+- backend / db-init / redis 用 ECR repository
 - ECS task execution role
 - ECS task role
 - Secrets Manager、CloudWatch Logs などへのアクセス権
@@ -68,7 +68,7 @@
 
 ## ECR 設計
 
-- repository は backend 用のみ作成する
+- repository は backend / db-init / redis 用を作成する
 - image scan は有効化する
 - lifecycle policy を設定し、古い image を自動削除できるようにする
 - lifecycle policy は最新 10 件を保持し、10 件を超えた古い image を削除する
@@ -110,6 +110,7 @@
 - ECS task role ARN
 - backend 用 ECR repository URL
 - backend 用 ECR repository ARN
+- db-init / redis を含む ECR repository は CI/CD ロールの権限対象として管理する
 
 ## ファイル構成
 
@@ -117,7 +118,7 @@
   - backend / provider 設定
   - `modules/account` 呼び出し
 - `variables.tf`
-  - AWS account ID、許可する GitHub repository、backend 用 ECR repository 名などの入力を定義
+  - AWS account ID、許可する GitHub repository、ECR repository 名などの入力を定義
 - `outputs.tf`
   - `application` や CI/CD が参照する role ARN、repository URL を公開
 

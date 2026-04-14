@@ -21,7 +21,10 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
 
 locals {
   github_actions_oidc_provider_arn = var.github_actions_oidc_provider_arn != null ? var.github_actions_oidc_provider_arn : aws_iam_openid_connect_provider.github_actions[0].arn
-  backend_ecr_repository_arn       = "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${var.backend_ecr_repository_name}"
+  cicd_ecr_repository_arns = [
+    for name in local.ecr_repository_names :
+    "arn:aws:ecr:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:repository/${name}"
+  ]
 }
 
 # ロールの作成
@@ -72,7 +75,14 @@ data "aws_iam_policy_document" "cicd" {
       "ecr:PutImage",
       "ecr:UploadLayerPart"
     ]
-    resources = [local.backend_ecr_repository_arn]
+    resources = local.cicd_ecr_repository_arns
+  }
+  statement {
+    sid = "EcrCreateRepository"
+    actions = [
+      "ecr:CreateRepository"
+    ]
+    resources = ["*"]
   }
   statement {
     sid = "EcsDescribeNetworkForDeploy"

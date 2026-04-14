@@ -1,9 +1,9 @@
 output "backend_ecr_repository_url" {
-  value = aws_ecr_repository.backend.repository_url
+  value = aws_ecr_repository.this[var.backend_ecr_repository_name].repository_url
 }
 
 output "backend_ecr_repository_arn" {
-  value = aws_ecr_repository.backend.arn
+  value = aws_ecr_repository.this[var.backend_ecr_repository_name].arn
 }
 
 output "oidc_provider_arn" {
