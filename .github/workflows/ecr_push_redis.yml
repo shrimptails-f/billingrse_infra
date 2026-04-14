@@ -23,7 +23,7 @@ jobs:
       ECR_REPOSITORY: billingrse-dev-redis
       UPSTREAM_IMAGE: redis:8.4-alpine
       IMAGE_TAG: ${{ github.event.inputs.image_tag || github.sha }}
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN_BACKEND }}
 
     steps:
       - name: Checkout

@@ -23,7 +23,7 @@ jobs:
       ECR_REPOSITORY: billingrse-dev-db-init
       IMAGE_NAME: billingrse-dev-db-init
       IMAGE_TAG: ${{ github.event.inputs.image_tag || github.sha }}
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN_BACKEND }}
 
     steps:
       - name: Checkout
