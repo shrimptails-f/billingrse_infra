@@ -31,8 +31,9 @@ variable "ecs_task_secretsmanager_suffixes" {
 variable "github_repo_subjects" {
   type = list(string)
   default = [
+    "repo:shrimptails-f/billingrse_infra:*",
     "repo:shrimptails-f/billingrse_backend:*",
-    "repo:shrimptails-f/billingrse_infra:*"
+    "repo:shrimptails-f/billingrse_front:*"
   ]
   description = "Allowed GitHub OIDC subjects (token.actions.githubusercontent.com:sub) that can assume the OIDC role."
 }

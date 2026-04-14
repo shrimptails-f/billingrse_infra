@@ -88,11 +88,40 @@ data "aws_iam_policy_document" "cicd" {
     actions = [
       "ecs:RegisterTaskDefinition",
       "ecs:DeregisterTaskDefinition",
+      "ecs:RunTask",
       "ecs:UpdateService",
       "ecs:DescribeServices",
       "ecs:DescribeClusters",
       "ecs:DescribeTaskDefinition",
       "ecs:ListTaskDefinitions"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    sid = "FrontS3DeployList"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::${local.front_bucket_name}"
+    ]
+  }
+  statement {
+    sid = "FrontS3DeployObjects"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${local.front_bucket_name}/*"
+    ]
+  }
+  statement {
+    sid = "CloudFrontInvalidate"
+    actions = [
+      "cloudfront:ListDistributions",
+      "cloudfront:CreateInvalidation"
     ]
     resources = ["*"]
   }

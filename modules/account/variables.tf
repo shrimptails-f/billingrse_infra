@@ -25,8 +25,9 @@ variable "github_actions_oidc_provider_arn" {
 }
 
 locals {
-  project_name = "billingrse"
-  deploy_name  = "${local.project_name}-${var.stage}"
+  project_name      = "billingrse"
+  deploy_name       = "${local.project_name}-${var.stage}"
+  front_bucket_name = "${local.deploy_name}-front"
   common_tags = {
     Project = local.project_name
     Managed = "terraform"
