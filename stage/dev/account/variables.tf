@@ -58,3 +58,9 @@ variable "github_front_repo_subjects" {
   ]
   description = "Allowed GitHub OIDC subjects for front deploy role."
 }
+
+variable "github_repo_subjects" {
+  type        = list(string)
+  default     = []
+  description = "Deprecated compatibility subjects for shared OIDC trust."
+}
