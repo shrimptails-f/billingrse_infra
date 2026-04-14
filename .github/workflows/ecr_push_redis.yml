@@ -1,0 +1,61 @@
+# Redisの公式イメージをECRにミラーする
+name: Mirror Redis Image to ECR
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag (default: commit SHA)'
+        required: false
+        default: ''
+
+jobs:
+  push:
+    name: Pull redis:8.4-alpine and push to ECR
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      AWS_REGION: ap-northeast-1
+      ECR_REPOSITORY: billingrse-dev-backend
+      UPSTREAM_IMAGE: redis:8.4-alpine
+      IMAGE_TAG: redis-${{ github.event.inputs.image_tag || github.sha }}
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Ensure backend ECR repository exists
+        run: |
+          aws ecr describe-repositories --repository-names "${ECR_REPOSITORY}" >/dev/null
+
+      - name: Build Redis image
+        working-directory: ecr_image/redis
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build \
+            --build-arg REDIS_VERSION=${IMAGE_TAG} \
+            -t ${ECR_REPOSITORY}:${IMAGE_TAG} \
+            .
+          docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+
+      - name: Push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
