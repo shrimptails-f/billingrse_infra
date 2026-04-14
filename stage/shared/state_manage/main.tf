@@ -7,21 +7,11 @@ terraform {
       version = "6.25.0"
     }
   }
-
-  backend "s3" {
-    bucket         = "tfstate-billingrse-shared"
-    dynamodb_table = "tfstate-billingrse-lock-shared"
-    region         = "ap-northeast-1"
-    key            = "dev/state_manage/terraform.tfstate"
-    encrypt        = true
-  }
 }
 
 provider "aws" {
   region = module.common.aws_region
 }
-
-data "aws_caller_identity" "current" {}
 
 module "common" {
   source = "../../common"
