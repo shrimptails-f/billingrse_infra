@@ -1,5 +1,5 @@
 # DBインスタンス作成時、スキーマ・ユーザーの作成が必要なため、それを実行するタスク定義で使うECRをプッシュします。
-name: Push DB Init Image to ECR
+name: Push DB Init Image
 
 permissions:
   id-token: write

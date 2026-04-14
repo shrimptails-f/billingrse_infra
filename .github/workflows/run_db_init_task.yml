@@ -1,5 +1,5 @@
 # DB init タスクを手動で実行するワークフロー。リージョンと論理名でIDを解決して run-task。
-name: Run DB Init Task
+name: Run DB Init
 
 permissions:
   id-token: write

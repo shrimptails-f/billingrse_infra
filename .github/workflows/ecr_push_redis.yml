@@ -1,5 +1,5 @@
 # Redisの公式イメージをECRにミラーする
-name: Mirror Redis Image to ECR
+name: Mirror Redis Image
 
 permissions:
   id-token: write
