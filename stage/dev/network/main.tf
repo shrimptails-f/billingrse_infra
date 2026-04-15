@@ -30,10 +30,12 @@ locals {
 
   public_subnet_cidrs = {
     a = "10.0.0.0/24"
+    c = "10.0.2.0/24"
   }
 
   private_db_subnet_cidrs = {
     a = "10.0.1.0/24"
+    c = "10.0.3.0/24"
   }
 }
 
