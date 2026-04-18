@@ -46,6 +46,11 @@ variable "task_role_arn" {
   type = string
 }
 
+variable "db_init_task_role_arn" {
+  type    = string
+  default = null
+}
+
 variable "backend_container_image" {
   type = string
 }
@@ -77,6 +82,39 @@ variable "backend_environment" {
 
 variable "redis_container_image" {
   type = string
+}
+
+variable "db_init_image" {
+  type = string
+}
+
+variable "db_init_secret_name" {
+  type    = string
+  default = "billingrse_dev"
+}
+
+variable "db_init_mysql_database" {
+  type    = string
+  default = "development"
+}
+
+variable "db_tools_image" {
+  type = string
+}
+
+variable "db_tools_task_cpu" {
+  type    = number
+  default = 256
+}
+
+variable "db_tools_task_memory" {
+  type    = number
+  default = 512
+}
+
+variable "db_tools_default_command" {
+  type    = list(string)
+  default = ["sh", "-c", "sleep 3600"]
 }
 
 variable "redis_port" {

@@ -14,6 +14,14 @@ output "backend_task_definition_arn" {
   value = aws_ecs_task_definition.backend.arn
 }
 
+output "db_init_task_definition_arn" {
+  value = aws_ecs_task_definition.db_init.arn
+}
+
+output "db_tools_task_definition_arn" {
+  value = aws_ecs_task_definition.db_tools.arn
+}
+
 output "redis_service_name" {
   value = aws_ecs_service.redis.name
 }

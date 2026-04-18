@@ -1,6 +1,8 @@
 locals {
   backend_log_group_name = "/ecs/${local.deploy_name}-backend"
   redis_log_group_name   = "/ecs/${local.deploy_name}-redis"
+  db_host                = aws_db_instance.main.address
+  db_master_secret_arn   = aws_db_instance.main.master_user_secret[0].secret_arn
 
   redis_discovery_namespace = "${local.deploy_name}.local"
 
@@ -9,7 +11,7 @@ locals {
     // DB関連はデプロイ時でないと決まらないのでこのタイミングで設定する。
     {
       DB_SECRET_NAME = data.aws_secretsmanager_secret.db_master.name
-      DB_HOST    = aws_db_instance.main.address
+      DB_HOST    = local.db_host
       DB_PORT    = tostring(aws_db_instance.main.port)
       DB_NAME    = aws_db_instance.main.db_name
       REDIS_HOST = "redis.${aws_service_discovery_private_dns_namespace.redis.name}"

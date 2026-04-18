@@ -52,14 +52,59 @@ variable "redis_container_image" {
   default = ""
 }
 
+variable "db_init_image" {
+  type    = string
+  default = ""
+}
+
+variable "db_tools_image" {
+  type    = string
+  default = ""
+}
+
 variable "redis_repository_name" {
   type    = string
   default = "billingrse-dev-redis"
 }
 
+variable "db_init_repository_name" {
+  type    = string
+  default = "billingrse-dev-db-init"
+}
+
+variable "db_tools_repository_name" {
+  type    = string
+  default = "billingrse-dev-db-tools"
+}
+
 variable "redis_image_tag" {
   type    = string
   default = "latest"
+}
+
+variable "db_init_image_tag" {
+  type    = string
+  default = "latest"
+}
+
+variable "db_tools_image_tag" {
+  type    = string
+  default = "latest"
+}
+
+variable "db_init_secret_name" {
+  type    = string
+  default = "billingrse_dev"
+}
+
+variable "db_init_mysql_database" {
+  type    = string
+  default = "development"
+}
+
+variable "db_init_task_role_arn" {
+  type    = string
+  default = null
 }
 
 variable "backend_container_port" {
@@ -100,6 +145,21 @@ variable "redis_task_memory" {
 variable "redis_desired_count" {
   type    = number
   default = 1
+}
+
+variable "db_tools_task_cpu" {
+  type    = number
+  default = 256
+}
+
+variable "db_tools_task_memory" {
+  type    = number
+  default = 512
+}
+
+variable "db_tools_default_command" {
+  type    = list(string)
+  default = ["sh", "-c", "sleep 3600"]
 }
 
 variable "enable_execute_command" {

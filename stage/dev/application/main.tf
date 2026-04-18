@@ -62,9 +62,13 @@ locals {
 
   backend_repository_url = data.terraform_remote_state.account.outputs.backend_ecr_repository_url
   redis_repository_url   = lookup(local.account_ecr_repository_urls, var.redis_repository_name, "")
+  db_init_repository_url = lookup(local.account_ecr_repository_urls, var.db_init_repository_name, "")
+  db_tools_repository_url = lookup(local.account_ecr_repository_urls, var.db_tools_repository_name, "")
 
   backend_container_image = var.backend_container_image != "" ? var.backend_container_image : "${local.backend_repository_url}:${var.backend_image_tag}"
   redis_container_image   = var.redis_container_image != "" ? var.redis_container_image : (local.redis_repository_url != "" ? "${local.redis_repository_url}:${var.redis_image_tag}" : "redis:7.2-alpine")
+  db_init_image           = var.db_init_image != "" ? var.db_init_image : (local.db_init_repository_url != "" ? "${local.db_init_repository_url}:${var.db_init_image_tag}" : "public.ecr.aws/docker/library/alpine:3.19")
+  db_tools_image          = var.db_tools_image != "" ? var.db_tools_image : (local.db_tools_repository_url != "" ? "${local.db_tools_repository_url}:${var.db_tools_image_tag}" : "public.ecr.aws/docker/library/alpine:3.19")
 
   front_domain_name     = var.front_domain_name != "" ? var.front_domain_name : try(data.terraform_remote_state.domain.outputs.front_domain_name, "")
   front_certificate_arn = var.front_certificate_arn != "" ? var.front_certificate_arn : try(data.terraform_remote_state.domain.outputs.front_certificate_arn, "")
@@ -115,7 +119,15 @@ module "application" {
   target_group_arn           = data.terraform_remote_state.network.outputs.app_target_group_arn
   task_execution_role_arn    = data.terraform_remote_state.account.outputs.ecs_task_execution_role_arn
   task_role_arn              = data.terraform_remote_state.account.outputs.ecs_task_role_arn
+  db_init_task_role_arn      = var.db_init_task_role_arn
   backend_container_image    = local.backend_container_image
+  db_init_image              = local.db_init_image
+  db_tools_image             = local.db_tools_image
+  db_init_secret_name        = var.db_init_secret_name
+  db_init_mysql_database     = var.db_init_mysql_database
+  db_tools_task_cpu          = var.db_tools_task_cpu
+  db_tools_task_memory       = var.db_tools_task_memory
+  db_tools_default_command   = var.db_tools_default_command
   backend_container_port     = var.backend_container_port
   backend_task_cpu           = var.backend_task_cpu
   backend_task_memory        = var.backend_task_memory
