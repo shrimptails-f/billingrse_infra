@@ -7,6 +7,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "db-initイメージタグを指定してください"
+        required: false
+        default: "latest"
 
 jobs:
   run-task:
@@ -22,6 +27,8 @@ jobs:
       APP_SECURITY_GROUP_NAME: billingrse-app
       CLUSTER_NAME: billingrse-dev-cluster
       TASK_DEFINITION_FAMILY: billingrse-dev-db-init
+      ECR_REPOSITORY: billingrse-dev-db-init
+      IMAGE_TAG: ${{ github.event.inputs.image_tag }}
 
     steps:
       - name: Checkout
@@ -70,6 +77,41 @@ jobs:
             echo "App SG not found"; exit 1; fi
           if [ -z "${TASK_DEF_ARN}" ] || [ "${TASK_DEF_ARN}" = "None" ]; then
             echo "Task definition not found"; exit 1; fi
+
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity \
+            --query 'Account' --output text)
+          IMAGE_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+          aws ecr describe-images \
+            --region "${AWS_REGION}" \
+            --repository-name "${ECR_REPOSITORY}" \
+            --image-ids imageTag="${IMAGE_TAG}" >/dev/null
+
+          aws ecs describe-task-definition \
+            --region "${AWS_REGION}" \
+            --task-definition "${TASK_DEF_ARN}" \
+            --query 'taskDefinition' > taskdef.json
+
+          jq --arg IMAGE_URI "${IMAGE_URI}" '
+            .containerDefinitions |= map(
+              if .name == "db-init" then .image = $IMAGE_URI else . end
+            )
+            | del(
+                .taskDefinitionArn,
+                .revision,
+                .status,
+                .requiresAttributes,
+                .compatibilities,
+                .registeredAt,
+                .registeredBy
+              )
+          ' taskdef.json > new-taskdef.json
+
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --region "${AWS_REGION}" \
+            --cli-input-json file://new-taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
 
           echo "Using VPC: ${VPC_ID}"
           echo "Using subnets: [${SUBNETS}]"
