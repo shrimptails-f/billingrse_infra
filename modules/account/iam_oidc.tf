@@ -129,7 +129,8 @@ data "aws_iam_policy_document" "infra_cicd" {
     sid = "EcrAuthDescribe"
     actions = [
       "ecr:GetAuthorizationToken",
-      "ecr:DescribeRepositories"
+      "ecr:DescribeRepositories",
+      "ecr:DescribeImages"
     ]
     resources = ["*"]
   }
@@ -170,6 +171,7 @@ data "aws_iam_policy_document" "infra_cicd" {
     sid = "EcsServiceDeploy"
     actions = [
       "ecs:RegisterTaskDefinition",
+      "ecs:TagResource",
       "ecs:DeregisterTaskDefinition",
       "ecs:RunTask",
       "ecs:UpdateService",
@@ -234,7 +236,8 @@ data "aws_iam_policy_document" "backend_cicd" {
     sid = "EcrAuthDescribe"
     actions = [
       "ecr:GetAuthorizationToken",
-      "ecr:DescribeRepositories"
+      "ecr:DescribeRepositories",
+      "ecr:DescribeImages"
     ]
     resources = ["*"]
   }
@@ -275,6 +278,7 @@ data "aws_iam_policy_document" "backend_cicd" {
     sid = "EcsServiceDeploy"
     actions = [
       "ecs:RegisterTaskDefinition",
+      "ecs:TagResource",
       "ecs:DeregisterTaskDefinition",
       "ecs:RunTask",
       "ecs:UpdateService",
