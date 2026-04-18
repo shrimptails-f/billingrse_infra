@@ -14,12 +14,13 @@
 ## 設計方針
 
 - `dev` 環境のため、可用性よりもコストを優先する
-- 単一 AZ を前提に構成する
+- アプリケーション実リソースの運用は単一 AZ を前提にする
+- ただし ALB と RDS の要件を満たすため、subnet は 2 AZ 分を作成する
 - public subnet と private db subnet を分離する
 - NAT Gateway は置かない前提で設計する
 - VPC Endpoint は初期構成では配置しない
 - VPC DNS は有効化する
-- Redis は ElastiCache ではなく EC2 上の self-managed Redis を前提とする
+- Redis は ElastiCache ではなく ECS Fargate 上の Redis を前提とする
 - 将来 `application` stack が参照しやすいように、ネットワーク関連の ID は `outputs.tf` から公開する
 
 ## CIDR 方針
@@ -36,8 +37,10 @@
 
 ```text
 VPC                10.0.0.0/20
-public subnet      10.0.0.0/24
-private db subnet  10.0.1.0/24
+public subnet a    10.0.0.0/24
+public subnet c    10.0.2.0/24
+private db subnet a 10.0.1.0/24
+private db subnet c 10.0.3.0/24
 ```
 
 ## 想定配置
@@ -50,7 +53,7 @@ private db subnet  10.0.1.0/24
 ### private db subnet
 
 - RDS
-- Redis on EC2
+- Redis on ECS Fargate
 
 `dev` 環境では NAT を置かない前提のため、アプリケーション実行基盤は public subnet に配置し、外向き通信は public IP と Internet Gateway 経由で成立させる。
 DB 系リソースは private db subnet に配置し、外部公開しない。

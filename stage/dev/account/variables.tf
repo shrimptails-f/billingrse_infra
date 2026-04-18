@@ -44,7 +44,6 @@ variable "github_infra_repo_subjects" {
 variable "github_backend_repo_subjects" {
   type = list(string)
   default = [
-    "repo:shrimptails-f/billingrse_infra:*",
     "repo:shrimptails-f/billingrse_backend:*"
   ]
   description = "Allowed GitHub OIDC subjects for backend deploy role."
@@ -53,7 +52,6 @@ variable "github_backend_repo_subjects" {
 variable "github_front_repo_subjects" {
   type = list(string)
   default = [
-    "repo:shrimptails-f/billingrse_infra:*",
     "repo:shrimptails-f/billingrse_front:*"
   ]
   description = "Allowed GitHub OIDC subjects for front deploy role."

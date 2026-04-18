@@ -15,7 +15,7 @@ jobs:
     environment: dev
     env:
       AWS_REGION: ap-northeast-1
-      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN_BACKEND }}
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       STAGE: dev
       VPC_NAME: billingrse-dev-vpc
       APP_SUBNET_TAG: billingrse-dev-public-a
