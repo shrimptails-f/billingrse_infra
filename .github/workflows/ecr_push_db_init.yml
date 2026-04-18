@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: 'Docker image tag (default: commit SHA)'
+        description: "db-init-toolsのイメージタグを指定してください"
         required: false
-        default: ''
+        default: "latest"
 
 jobs:
   push:
@@ -22,7 +22,7 @@ jobs:
       AWS_REGION: ap-northeast-1
       ECR_REPOSITORY: billingrse-dev-db-init
       IMAGE_NAME: billingrse-dev-db-init
-      IMAGE_TAG: ${{ github.event.inputs.image_tag || github.sha }}
+      IMAGE_TAG: ${{ github.event.inputs.image_tag }}
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
 
     steps:
