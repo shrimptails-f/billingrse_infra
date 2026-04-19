@@ -12,6 +12,7 @@ crash.log
 
 # draw io
 *.drawio.bkp
+*.svg.bkp
 
 # 開発周り
 tasks
