@@ -10,7 +10,6 @@ locals {
     var.backend_environment,
     // DB関連はデプロイ時でないと決まらないのでこのタイミングで設定する。
     {
-      DB_SECRET_NAME = data.aws_secretsmanager_secret.db_master.name
       DB_HOST    = local.db_host
       DB_PORT    = tostring(aws_db_instance.main.port)
       DB_NAME    = aws_db_instance.main.db_name
@@ -18,10 +17,6 @@ locals {
       REDIS_PORT = tostring(var.redis_port)
     }
   )
-}
-
-data "aws_secretsmanager_secret" "db_master" {
-  arn = aws_db_instance.main.master_user_secret[0].secret_arn
 }
 
 data "aws_subnet" "private_db" {
