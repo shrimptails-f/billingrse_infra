@@ -63,11 +63,10 @@ jobs:
                       Name=tag:Stage,Values="${STAGE}" \
             --query 'SecurityGroups[0].GroupId' --output text)
 
-          TASK_DEF_ARN=$(aws ecs list-task-definitions \
+          TASK_DEF_ARN=$(aws ecs describe-task-definition \
             --region "${AWS_REGION}" \
-            --family-prefix "${TASK_DEFINITION_FAMILY}" \
-            --status ACTIVE --sort DESC --max-items 1 \
-            --query 'taskDefinitionArns[0]' --output text)
+            --task-definition "${TASK_DEFINITION_FAMILY}" \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
 
           if [ -z "${VPC_ID}" ] || [ "${VPC_ID}" = "None" ]; then
             echo "VPC not found"; exit 1; fi
@@ -89,7 +88,7 @@ jobs:
 
           aws ecs describe-task-definition \
             --region "${AWS_REGION}" \
-            --task-definition "${TASK_DEF_ARN}" \
+            --task-definition "${TASK_DEFINITION_FAMILY}" \
             --query 'taskDefinition' > taskdef.json
 
           jq --arg IMAGE_URI "${IMAGE_URI}" '
