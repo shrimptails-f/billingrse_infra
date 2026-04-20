@@ -14,8 +14,8 @@
 依存関係の逆順で削除します。
 
 1. `stage/dev/application`
-2. （必要時のみ）`stage/dev/network`
-3. （必要時のみ）`stage/dev/account`
+2. （必要時のみ）`stage/dev/account`
+3. （必要時のみ）`stage/dev/network`
 4. （必要時のみ）`stage/shared/domain`
 5. （通常は保持）`stage/dev/state_manage` / `stage/shared/state_manage`
 

@@ -29,3 +29,11 @@ output "redis_security_group_id" {
 output "app_target_group_arn" {
   value = aws_lb_target_group.app.arn
 }
+
+output "ecr_api_vpc_endpoint_id" {
+  value = aws_vpc_endpoint.ecr_api.id
+}
+
+output "ecr_dkr_vpc_endpoint_id" {
+  value = aws_vpc_endpoint.ecr_dkr.id
+}

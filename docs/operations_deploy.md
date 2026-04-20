@@ -47,8 +47,8 @@ Terraformの変更がある場合は、依存順で対象 stack のみ apply し
 
 推奨順序:
 
-1. `stage/dev/account`（変更時のみ）
-2. `stage/dev/network`（変更時のみ）
+1. `stage/dev/network`（変更時のみ）
+2. `stage/dev/account`（変更時のみ）
 3. `stage/shared/domain`（必要時）
 4. `stage/dev/application`
 

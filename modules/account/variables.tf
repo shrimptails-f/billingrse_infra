@@ -49,6 +49,12 @@ variable "github_actions_oidc_provider_arn" {
   default     = null
 }
 
+variable "ecr_pull_allowed_vpce_ids" {
+  type        = list(string)
+  description = "Allowed VPC endpoint IDs for ECS task execution role ECR pull operations."
+  default     = []
+}
+
 locals {
   project_name = "billingrse"
   deploy_name  = "${local.project_name}-${var.stage}"

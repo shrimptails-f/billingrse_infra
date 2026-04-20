@@ -65,15 +65,15 @@ terraform -chdir=/home/dev/infra/stage/dev/state_manage apply
 terraform -chdir=/home/dev/infra/stage/shared/domain init
 terraform -chdir=/home/dev/infra/stage/shared/domain apply
 ```
-4. `stage/dev/account`をapplyする
-```
-terraform -chdir=/home/dev/infra/stage/dev/account init
-terraform -chdir=/home/dev/infra/stage/dev/account apply
-```
-5. `stage/dev/network`をapplyする
+4. `stage/dev/network`をapplyする
 ```
 terraform -chdir=/home/dev/infra/stage/dev/network init
 terraform -chdir=/home/dev/infra/stage/dev/network apply
+```
+5. `stage/dev/account`をapplyする
+```
+terraform -chdir=/home/dev/infra/stage/dev/account init
+terraform -chdir=/home/dev/infra/stage/dev/account apply
 ```
 6. [Infra](https://github.com/shrimptails-f/billingrse_infra/actions)のリポジトリのActionsタブから`Push DB Init Image`を実行  
    イメージタグにはお好きな値を指定してください。  

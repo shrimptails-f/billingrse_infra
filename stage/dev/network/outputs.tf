@@ -29,3 +29,11 @@ output "redis_security_group_id" {
 output "app_target_group_arn" {
   value = module.network.app_target_group_arn
 }
+
+output "ecr_api_vpc_endpoint_id" {
+  value = module.network.ecr_api_vpc_endpoint_id
+}
+
+output "ecr_dkr_vpc_endpoint_id" {
+  value = module.network.ecr_dkr_vpc_endpoint_id
+}

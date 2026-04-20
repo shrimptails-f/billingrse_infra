@@ -18,7 +18,7 @@
 - ただし ALB と RDS の要件を満たすため、subnet は 2 AZ 分を作成する
 - public subnet と private db subnet を分離する
 - NAT Gateway は置かない前提で設計する
-- VPC Endpoint は初期構成では配置しない
+- private subnet 上の Redis(ECS) が起動できる最小構成として、必要な VPC Endpoint のみ配置する
 - VPC DNS は有効化する
 - Redis は ElastiCache ではなく ECS Fargate 上の Redis を前提とする
 - 将来 `application` stack が参照しやすいように、ネットワーク関連の ID は `outputs.tf` から公開する
@@ -68,6 +68,25 @@ NAT を置かない前提で、以下の通信を考慮する。
 - image pull、ログ出力、シークレット参照など、アプリ実装に必要な outbound 通信先は別途洗い出す
 
 この stack では、VPC と subnet の土台に加えて、アプリケーションが利用する基本的な通信境界を管理する。
+
+## Redis private 起動のための設計判断
+
+Redis は private db subnet (`ap-northeast-1a`) で `assign_public_ip = false` のため、
+ECS タスク起動時の ECR pull / CloudWatch Logs 出力を閉域で成立させる。
+
+- Interface Endpoint（`private_db[a]` のみ配置）
+  - `ecr.api`
+  - `ecr.dkr`
+  - `logs` (`awslogs` 用)
+- Gateway Endpoint
+  - `s3`（private db route table のみ関連付け）
+
+セキュリティグループは最小許可で構成する。
+
+- `vpce` SG inbound: `redis` SG から `443/tcp` のみ
+- `redis` SG outbound:
+  - `vpce` SG 向け `443/tcp`
+  - S3 prefix list 向け `443/tcp`
 
 ## Security Group 設計
 
@@ -128,9 +147,9 @@ NAT を置かない前提で、以下の通信を考慮する。
 
 理由:
 
-- `Fargate` を public subnet に配置し、public IP と Internet Gateway 経由で AWS マネージドサービスへ接続できるため
-- `dev` 環境では閉域化よりも構成の単純さとコストを優先するため
-- 利用する AWS サービスが固まってから必要最小限で追加したほうが過剰設計を避けやすいため
+- backend は public subnet 運用を前提としており、private 側に必要な最小セットのみ Endpoint 化するため
+- Redis を private subnet で運用しつつ NAT 費用を抑えるため
+- `ecr.api/ecr.dkr/logs/s3` 以外の Endpoint は現時点では追加しないため
 
 ## ファイル構成
 

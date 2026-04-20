@@ -21,6 +21,35 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_base" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy" "ecs_task_execution_ecr_pull_vpce_only" {
+  count = length(var.ecr_pull_allowed_vpce_ids) > 0 ? 1 : 0
+
+  name = "${local.deploy_name}-ecs-execution-ecr-vpce-only"
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "DenyEcrPullOutsideAllowedVpce"
+        Effect = "Deny"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer"
+        ]
+        Resource = "*"
+        Condition = {
+          StringNotEquals = {
+            "aws:sourceVpce" = var.ecr_pull_allowed_vpce_ids
+          }
+        }
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
   count = length(var.ecs_task_secretsmanager_arns) > 0 ? 1 : 0
 
