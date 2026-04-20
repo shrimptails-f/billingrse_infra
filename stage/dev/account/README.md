@@ -58,6 +58,11 @@
   - タスク起動に必要な最低限の Secrets 参照
 - アプリケーションロジックが使う AWS API 権限はここへ載せない
 
+補足（private subnet Redis 運用）:
+
+- ECR pull は VPC Endpoint 経由を前提とする
+- `aws:sourceVpce` 条件を用いた制御により、想定 Endpoint 以外からの ECR pull を拒否する設計を採用する
+
 ### ECS task role
 
 - backend や補助タスクが実行時に使う role とする

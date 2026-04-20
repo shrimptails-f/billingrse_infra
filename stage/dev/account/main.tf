@@ -23,12 +23,28 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+data "terraform_remote_state" "network" {
+  backend = "s3"
+
+  config = {
+    bucket         = "tfstate-billingrse-dev"
+    dynamodb_table = "tfstate-billingrse-lock-dev"
+    region         = "ap-northeast-1"
+    key            = "network/terraform.tfstate"
+    encrypt        = true
+  }
+}
+
 locals {
   ecs_task_secretsmanager_arns = [
     for suffix in var.ecs_task_secretsmanager_suffixes :
     "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:${suffix}"
   ]
   github_actions_oidc_provider_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+  ecr_pull_allowed_vpce_ids = [
+    data.terraform_remote_state.network.outputs.ecr_api_vpc_endpoint_id,
+    data.terraform_remote_state.network.outputs.ecr_dkr_vpc_endpoint_id,
+  ]
 }
 
 module "account" {
@@ -44,4 +60,5 @@ module "account" {
   github_infra_repo_subjects       = var.github_infra_repo_subjects
   github_backend_repo_subjects     = var.github_backend_repo_subjects
   github_front_repo_subjects       = var.github_front_repo_subjects
+  ecr_pull_allowed_vpce_ids        = local.ecr_pull_allowed_vpce_ids
 }

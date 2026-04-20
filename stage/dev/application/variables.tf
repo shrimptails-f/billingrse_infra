@@ -43,8 +43,9 @@ variable "backend_container_image" {
 }
 
 variable "backend_image_tag" {
-  type    = string
-  default = "latest"
+  type = string
+  # `latest` だと割り当てられないため、固定タグを使う。
+  default = "1"
 }
 
 variable "redis_container_image" {
@@ -78,8 +79,9 @@ variable "db_tools_repository_name" {
 }
 
 variable "redis_image_tag" {
-  type    = string
-  default = "latest"
+  type = string
+  # `latest` だと割り当てられないため、固定タグを使う。
+  default = "1"
 }
 
 variable "db_init_image_tag" {
