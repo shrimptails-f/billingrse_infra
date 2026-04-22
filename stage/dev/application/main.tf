@@ -146,6 +146,7 @@ module "application" {
   db_backup_retention_period = var.db_backup_retention_period
   enable_execute_command     = var.enable_execute_command
   log_retention_in_days      = var.log_retention_in_days
+  front_bucket_force_destroy = true
   front_domain_name          = local.front_domain_name
   front_certificate_arn      = local.front_certificate_arn
   api_domain_name            = local.api_domain_name

@@ -206,6 +206,11 @@ variable "alb_ssl_policy" {
   default = "ELBSecurityPolicy-2016-08"
 }
 
+variable "front_bucket_force_destroy" {
+  type    = bool
+  default = false
+}
+
 locals {
   project_name = "billingrse"
   deploy_name  = "${local.project_name}-${var.stage}"

@@ -5,7 +5,7 @@ locals {
 
 resource "aws_s3_bucket" "front" {
   bucket        = local.front_bucket_name
-  force_destroy = false
+  force_destroy = var.front_bucket_force_destroy
   tags          = local.common_tags
 }
 
