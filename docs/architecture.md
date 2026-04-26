@@ -25,7 +25,10 @@ stage/
 │   ├── account/ OIDCやIAMロールなどを作る
 │   ├── network/ VPCやsubnetなどネットワークを作る
 │   └── application/ アプリ本体のインフラを作る
-└── shared/ 環境横断で扱う
+└── shared/ 環境横断の定数moduleとstack群
+    ├── const.tf shared環境固有の定数を管理
+    ├── outputs.tf 他stack参照用の値を出力
+    ├── state_manage/ shared用 remote state基盤を作る
     └── domain/ ドメインや証明書関連を管理する
 ```
 
@@ -33,6 +36,7 @@ stage/
 
 - `stage/common`と`stage/dev`はリソースを直接作るstackではなく、他stackから参照される定数moduleとして扱う
 - `stage/dev/state_manage`はremote state運用を成立させるためのbootstrap用ディレクトリとして扱う
+- `stage/shared` も `const.tf` / `outputs.tf` を持つ定数moduleであり、`domain` や `state_manage` などの shared stack 群を内包する
 
 ## 共通値の参照について
 
