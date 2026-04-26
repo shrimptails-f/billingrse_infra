@@ -15,10 +15,15 @@
 ## 設計方針
 
 - メール送信基盤は `application` や `account` に混在させず、`shared` stack として分離する
+  - SES はアプリ実行設定だけでなく DNS 検証や送信ドメイン運用を含むため、共有基盤として切り出した方が責務が明確になるため
 - DNS と密接に結びつく要素は `shared` 側で一元管理する
+  - DKIM、MAIL FROM、DMARC などは Route53 レコード管理と不可分であり、DNS 管理責務の近くに置く方が保守しやすいため
 - SES identity は環境単位のサブドメインで分離する
+  - `dev` と `prod` の送信経路や reputation 影響範囲を分け、環境間の誤送信リスクも下げやすくするため
 - DNS レコードは手運用ではなく Terraform で管理する
+  - DKIM や verification レコードの追加漏れを防ぎ、環境差分のない再現可能な運用にしたいため
 - 送信権限は `account` stack、実行時設定は `application` stack に分離する
+  - IAM とアプリ設定の変更頻度や責務が異なるため、既存 stack 境界に合わせて分離した方が変更影響を局所化できるため
 
 ## stack 境界
 
