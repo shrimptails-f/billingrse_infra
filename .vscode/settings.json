@@ -24,6 +24,12 @@
     "shrimptails",
     "shrimptail",
     "Billingrse",
-    "chdir"
+    "chdir",
+    "dmarc",
+    "dkim",
+    "adkim",
+    "aspf",
+    "amazonses", // amazon ses
+    "domainkey"
   ]
 }

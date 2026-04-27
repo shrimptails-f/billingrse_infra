@@ -45,7 +45,7 @@ variable "backend_container_image" {
 variable "backend_image_tag" {
   type = string
   # `latest` だと割り当てられないため、固定タグを使う。
-  default = "1"
+  default = "2"
 }
 
 variable "redis_container_image" {

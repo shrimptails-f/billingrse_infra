@@ -19,6 +19,12 @@ variable "ecs_task_secretsmanager_arns" {
   default     = []
 }
 
+variable "ecs_task_ses_from_addresses" {
+  type        = list(string)
+  description = "Allowed From addresses for ECS task SES send operations."
+  default     = []
+}
+
 variable "github_repo_subjects" {
   type        = list(string)
   description = "Deprecated fallback subjects for all GitHub OIDC roles."

@@ -90,7 +90,7 @@ locals {
     MYSQL_TEST_DATABASE      = "test"
     SMTP_HOST                = "mailhog"
     SMTP_PORT                = "1025"
-    EMAIL_FROM_ADDRESS       = "no-reply@local.auth.example.com"
+    EMAIL_FROM_ADDRESS       = "no-reply@dev.shrimptail.net"
     REDIS_HOST               = "redis"
     REDIS_PORT               = "6379"
     REDIS_DB                 = "0"
