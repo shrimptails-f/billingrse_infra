@@ -109,13 +109,18 @@
 
 主に以下を `outputs.tf` から公開する。
 
-- OIDC provider ARN
-- CI/CD 用 IAM role ARN
+- infra 用 CI/CD role ARN
+- backend 用 CI/CD role ARN
+- front 用 CI/CD role ARN
 - ECS task execution role ARN
 - ECS task role ARN
 - backend 用 ECR repository URL
-- backend 用 ECR repository ARN
-- db-init / redis を含む ECR repository は CI/CD ロールの権限対象として管理する
+- ECR repository URL 一覧
+
+補足:
+
+- OIDC provider ARN や backend 用 ECR repository ARN は module 内では生成されるが、root stack からは再公開しない
+- db-init / redis を含む ECR repository は `ecr_repository_urls` の参照対象および CI/CD ロールの権限対象として管理する
 
 ## ファイル構成
 

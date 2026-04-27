@@ -33,6 +33,14 @@ variable "ecs_task_secretsmanager_suffixes" {
   description = "Secret name patterns (suffix part) that ECS tasks can read via Secrets Manager."
 }
 
+variable "ecs_task_ses_from_addresses" {
+  type = list(string)
+  default = [
+    "no-reply@dev.shrimptail.net"
+  ]
+  description = "Allowed SES From addresses for ECS task role."
+}
+
 variable "github_infra_repo_subjects" {
   type = list(string)
   default = [

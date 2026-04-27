@@ -139,3 +139,29 @@ resource "aws_iam_role_policy" "ecs_task_secrets" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "ecs_task_ses" {
+  count = length(var.ecs_task_ses_from_addresses) > 0 ? 1 : 0
+
+  name = "${local.deploy_name}-ecs-task-ses"
+  role = aws_iam_role.ecs_task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ses:SendEmail",
+          "ses:SendRawEmail"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "ses:FromAddress" = var.ecs_task_ses_from_addresses
+          }
+        }
+      }
+    ]
+  })
+}

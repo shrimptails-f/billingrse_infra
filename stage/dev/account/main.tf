@@ -55,6 +55,7 @@ module "account" {
   backend_ecr_repository_name      = var.backend_ecr_repository_name
   ecr_repository_names             = var.ecr_repository_names
   ecs_task_secretsmanager_arns     = local.ecs_task_secretsmanager_arns
+  ecs_task_ses_from_addresses      = var.ecs_task_ses_from_addresses
   github_actions_oidc_provider_arn = local.github_actions_oidc_provider_arn
   github_repo_subjects             = var.github_repo_subjects
   github_infra_repo_subjects       = var.github_infra_repo_subjects

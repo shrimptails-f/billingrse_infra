@@ -14,6 +14,14 @@ resource "aws_vpc_security_group_ingress_rule" "vpce_from_vpc_https" {
   to_port                      = 443
 }
 
+resource "aws_vpc_security_group_ingress_rule" "vpce_from_app_https" {
+  security_group_id            = aws_security_group.vpce.id
+  referenced_security_group_id = aws_security_group.app.id
+  from_port                    = 443
+  ip_protocol                  = "tcp"
+  to_port                      = 443
+}
+
 resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = aws_vpc.main.id
   service_name        = "com.amazonaws.${var.aws_region}.ecr.api"
